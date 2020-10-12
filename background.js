@@ -1,49 +1,56 @@
-const zhihu = true;
-const steam = true;
+function Replace() {
+  this.zhihu = true;
+  this.steam = true;
+}
 
-const replaceDict = {
-  "https://www.zhihu.com": replaceZhihu,
-  "https://zhuanlan.zhihu.com": replaceZhihu,
-  "https://store.steampowered.com": replaceSteam,
+Replace.prototype.replaceDict = {
+  "https://www.zhihu.com": {
+    replaceMethod: this.replaceZhihu,
+    storageName: "zhihu",
+  },
+  "https://zhuanlan.zhihu.com": {
+    replaceMethod: this.replaceZhihu,
+    storageName: "zhihu",
+  },
+  "https://store.steampowered.com": {
+    replaceMethod: this.replaceSteam,
+    storageName: "steam",
+  },
 };
+Replace.prototype.replaceHref = function () {
+  const aTags = document.getElementsByTagName("a");
+  const { replaceMethod, storageName } = this.replaceDict[
+    window.location.origin
+  ];
 
-function replaceZhihu(a) {
-  if (a.href.indexOf("https://link.zhihu.com/?target=") !== -1 && zhihu) {
+  chrome.storage.local.get(storageName, (data) => {
+    if (data[storageName] === false) {
+      this[storageName] = false;
+    }
+
+    if (replaceMethod) {
+      Array.from(aTags).forEach(replaceMethod.bind(this));
+    }
+  });
+};
+Replace.prototype.replaceZhihu = function (a) {
+  if (a.href.indexOf("https://link.zhihu.com/?target=") !== -1 && this.zhihu) {
     a.href = a.href
       .replace("https://link.zhihu.com/?target=", "")
       .replace("%3A", ":");
   }
-}
-function replaceSteam(a) {
+};
+Replace.prototype.replaceSteam = function (a) {
   if (
     a.href.indexOf("https://steamcommunity.com/linkfilter/?url=") !== -1 &&
-    steam
+    this.steam
   ) {
     a.href = a.href.replace("https://steamcommunity.com/linkfilter/?url=", "");
   }
-}
+};
 
-function replaceHref() {
-  const aTags = document.getElementsByTagName("a");
-  const replace = replaceDict[window.location.origin];
+const replace = new Replace();
 
-  Array.from(aTags).forEach(replace);
-}
-
-window.onload = replaceHref;
-
-// chrome.storage.onChanged.addListener(function(changes, namespace) {
-//   for (key in changes) {
-//     if (key !== "REPLACE_ZHIHU_A_TAG") {
-//       return;
-//     }
-
-//     if (changes[key].newValue === false) {
-//       zhihu = false;
-//     } else {
-//       zhihu = true;
-
-//       replaceHref();
-//     }
-//   }
-// });
+window.onload = function () {
+  replace.replaceHref();
+};

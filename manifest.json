@@ -1,6 +1,6 @@
 {
   "name": "A_Tag",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "manifest_version": 2,
   "browser_action": {
     "default_icon": "icon48.png",
@@ -11,7 +11,7 @@
     "48": "icon48.png",
     "128": "icon100.png"
   },
-  "permissions": ["storage", "https://www.zhihu.com/"],
+  "permissions": ["storage"],
   "content_security_policy": "script-src 'self' 'sha256-GgRxrVOKNdB4LrRsVPDSbzvfdV4UqglmviH9GoBJ5jk='; object-src 'self'",
   "content_scripts": [
     {

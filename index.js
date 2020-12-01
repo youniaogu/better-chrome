@@ -1,13 +1,17 @@
-const list = ["zhihu", "steam"];
+const list = [
+  { id: "zhihuAtag", text: "replace zhihu a tag" },
+  { id: "steamAtag", text: "replace steam a tag" },
+  { id: "zhihuModal", text: "remove zhihu login modal" },
+];
 const content = document.createElement("div");
 
-function updateStorage(text) {
-  return function() {
-    chrome.storage.local.set({ [text]: this.checked });
+function updateStorage(id) {
+  return function () {
+    chrome.storage.local.set({ [id]: this.checked });
   };
 }
 
-function createSwitch(text, value) {
+function createSwitch(id, text, value) {
   const div = document.createElement("div");
   const label = document.createElement("label");
   const input = document.createElement("input");
@@ -21,7 +25,7 @@ function createSwitch(text, value) {
   span1.textContent = text + "：";
   span2.className = "slider";
 
-  input.onclick = updateStorage(text);
+  input.onclick = updateStorage(id);
 
   label.appendChild(input);
   label.appendChild(span2);
@@ -31,12 +35,12 @@ function createSwitch(text, value) {
   return div;
 }
 
-list.forEach(function(text) {
-  chrome.storage.local.get(text, data => {
-    content.appendChild(createSwitch(text, data[text]));
+list.forEach(function (obj) {
+  chrome.storage.local.get(obj.id, (data) => {
+    content.appendChild(createSwitch(obj.id, obj.text, data[obj.id]));
   });
 });
 
-window.addEventListener("DOMContentLoaded", function() {
+window.addEventListener("DOMContentLoaded", function () {
   document.body.appendChild(content);
 });

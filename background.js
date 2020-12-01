@@ -10,36 +10,55 @@ function replaceSteam(a) {
     a.href = a.href.replace("https://steamcommunity.com/linkfilter/?url=", "");
   }
 }
-
-function Replace() {
-  this.zhihu = true;
-  this.steam = true;
-}
-Replace.prototype.replaceDict = {
-  "https://www.zhihu.com": { method: replaceZhihu, name: "zhihu" },
-  "https://zhuanlan.zhihu.com": { method: replaceZhihu, name: "zhihu" },
-  "https://store.steampowered.com": { method: replaceSteam, name: "steam" }
-};
-Replace.prototype.replaceHref = function() {
+function replaceHref(fn) {
   const aTags = document.getElementsByTagName("a");
-  const { method, name } = this.replaceDict[window.location.origin] || {};
 
-  if (!method || !name) {
+  if (!fn) {
     return;
   }
 
-  chrome.storage.local.get(name, data => {
-    if (data[name] === false) {
-      this[name] = false;
-      return;
-    }
+  Array.from(aTags).forEach(fn);
+}
 
-    Array.from(aTags).forEach(method.bind(this));
+function removeQuestionLoginModal() {
+  Array.from(
+    document.getElementsByClassName("Modal-wrapper")
+  ).forEach((modal) => modal.remove());
+  Array.from(document.getElementsByTagName("html")).forEach(
+    (html) => (html.style.overflow = "auto")
+  );
+}
+
+function getConfig(key) {
+  return new Promise((res) => {
+    chrome.storage.local.get(key, (data) => {
+      res(data[key]);
+    });
   });
-};
+}
 
-const replace = new Replace();
+window.onload = function () {
+  const href = window.location.href;
+  const origin = window.location.origin;
 
-window.onload = function() {
-  replace.replaceHref();
+  getConfig("zhihuAtag").then((can) => {
+    if (
+      can &&
+      ["https://www.zhihu.com", "https://zhuanlan.zhihu.com"].includes(origin)
+    ) {
+      replaceHref(replaceZhihu);
+    }
+  });
+
+  getConfig("steamAtag").then((can) => {
+    if (can && ["https://store.steampowered.com"].includes(origin)) {
+      replaceHref(replaceSteam);
+    }
+  });
+
+  getConfig("zhihuModal").then((can) => {
+    if (can && href.indexOf("https://www.zhihu.com/question") !== -1) {
+      removeQuestionLoginModal();
+    }
+  });
 };

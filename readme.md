@@ -1,4 +1,4 @@
-### a-tag
+### Better Chrome
 
 #### 1. 替换知乎 a 标签 href 属性
 

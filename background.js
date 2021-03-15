@@ -20,7 +20,7 @@ function replaceHref(fn) {
   Array.from(aTags).forEach(fn);
 }
 
-function removeQuestionLoginModal() {
+function removeZhihuLoginModal() {
   Array.from(
     document.getElementsByClassName("Modal-wrapper")
   ).forEach((modal) => modal.remove());
@@ -38,7 +38,6 @@ function getConfig(key) {
 }
 
 window.onload = function () {
-  const href = window.location.href;
   const origin = window.location.origin;
 
   getConfig("zhihuAtag").then((can) => {
@@ -57,8 +56,11 @@ window.onload = function () {
   });
 
   getConfig("zhihuModal").then((can) => {
-    if (can && href.indexOf("https://www.zhihu.com/question") !== -1) {
-      removeQuestionLoginModal();
+    if (
+      can &&
+      ["https://www.zhihu.com", "https://zhuanlan.zhihu.com"].includes(origin)
+    ) {
+      removeZhihuLoginModal();
     }
   });
 };

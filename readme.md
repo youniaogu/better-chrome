@@ -12,13 +12,15 @@
 
 #### 3. 去掉知乎(包括知乎专栏)未登录弹窗
 
-<img width="480" src="./remove_zhihu_login_modal.png" />
+<img width="680" src="./images/remove_zhihu_login_modal.png" />
 
 ##### 开关控制
 
-<img width="240" src="./function_switch.png" />
+<img width="240" src="./images/function_switch.png" />
 
 ##### 安装
 
 - 打开 chrome 扩展程序的开发者模式
 - 在项目根目录，加载已解压的扩展程序
+
+<img src="./images/install_extensions.png" />

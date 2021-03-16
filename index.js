@@ -21,7 +21,7 @@ function createSwitch(id, text, value) {
   div.className = "wrapper";
   label.className = "switch";
   input.type = "checkbox";
-  input.checked = value !== false;
+  input.checked = value === false;
   span1.textContent = text + "：";
   span2.className = "slider";
 

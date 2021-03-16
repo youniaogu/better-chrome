@@ -1,13 +1,15 @@
 function replaceZhihu(a) {
   if (a.href.indexOf("https://link.zhihu.com/?target=") !== -1) {
-    a.href = a.href
-      .replace("https://link.zhihu.com/?target=", "")
-      .replace("%3A", ":");
+    a.href = decodeURIComponent(
+      a.href.replace("https://link.zhihu.com/?target=", "")
+    );
   }
 }
 function replaceSteam(a) {
   if (a.href.indexOf("https://steamcommunity.com/linkfilter/?url=") !== -1) {
-    a.href = a.href.replace("https://steamcommunity.com/linkfilter/?url=", "");
+    a.href = decodeURIComponent(
+      a.href.replace("https://steamcommunity.com/linkfilter/?url=", "")
+    );
   }
 }
 function replaceHref(fn) {

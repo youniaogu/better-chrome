@@ -1,34 +1,25 @@
-function replaceZhihu(a) {
-  if (a.href.indexOf("https://link.zhihu.com/?target=") !== -1) {
-    a.href = decodeURIComponent(
-      a.href.replace("https://link.zhihu.com/?target=", "")
-    );
-  }
-}
-function replaceSteam(a) {
-  if (a.href.indexOf("https://steamcommunity.com/linkfilter/?url=") !== -1) {
-    a.href = decodeURIComponent(
-      a.href.replace("https://steamcommunity.com/linkfilter/?url=", "")
-    );
-  }
-}
-function replaceHref(fn) {
-  const aTags = document.getElementsByTagName("a");
+const PATTERN_ZHIHU = /^https:\/\/www.zhihu.com\/question\//;
+const PATTERN_ZHIHU_ZHUANLAN = /^https:\/\/zhuanlan.zhihu.com\/p\//;
+const PATTERN_STEAM = /^https:\/\/store.steampowered.com\/app\//;
+const PATTERN_JUEJIN = /^https:\/\/juejin.cn\/post\//;
 
-  if (!fn) {
+function removePrefix(str) {
+  const aTags = document.getElementsByTagName('a');
+
+  if (!str) {
     return;
   }
 
-  Array.from(aTags).forEach(fn);
+  Array.from(aTags).forEach((a) => {
+    if (a.href.indexOf(str) !== -1) {
+      a.href = decodeURIComponent(a.href.replace(str, ''));
+    }
+  });
 }
 
 function removeZhihuLoginModal() {
-  Array.from(
-    document.getElementsByClassName("Modal-wrapper")
-  ).forEach((modal) => modal.remove());
-  Array.from(document.getElementsByTagName("html")).forEach(
-    (html) => (html.style.overflow = "auto")
-  );
+  Array.from(document.getElementsByClassName('Modal-wrapper')).forEach((modal) => modal.remove());
+  Array.from(document.getElementsByTagName('html')).forEach((html) => (html.style.overflow = 'auto'));
 }
 
 function getConfig(key) {
@@ -40,29 +31,30 @@ function getConfig(key) {
 }
 
 window.onload = function () {
-  const origin = window.location.origin;
+  const href = window.location.href;
+  const isZhihu = PATTERN_ZHIHU_ZHUANLAN.test(href) || PATTERN_ZHIHU.test(href);
+  const isSteam = PATTERN_STEAM.test(href);
+  const isJuejin = PATTERN_JUEJIN.test(href);
 
-  getConfig("zhihuAtag").then((can) => {
-    if (
-      can &&
-      ["https://www.zhihu.com", "https://zhuanlan.zhihu.com"].includes(origin)
-    ) {
-      replaceHref(replaceZhihu);
-    }
-  });
+  if (isZhihu) {
+    getConfig('zhihuAtag').then((can) => {
+      can && removePrefix('https://link.zhihu.com/?target=');
+    });
 
-  getConfig("steamAtag").then((can) => {
-    if (can && ["https://store.steampowered.com"].includes(origin)) {
-      replaceHref(replaceSteam);
-    }
-  });
+    getConfig('zhihuModal').then((can) => {
+      can && removeZhihuLoginModal();
+    });
+  }
 
-  getConfig("zhihuModal").then((can) => {
-    if (
-      can &&
-      ["https://www.zhihu.com", "https://zhuanlan.zhihu.com"].includes(origin)
-    ) {
-      removeZhihuLoginModal();
-    }
-  });
+  if (isSteam) {
+    getConfig('steamAtag').then((can) => {
+      can && removePrefix('https://steamcommunity.com/linkfilter/?url=');
+    });
+  }
+
+  if (isJuejin) {
+    getConfig('juejinAtag').then((can) => {
+      can && removePrefix('https://link.juejin.cn/?target=');
+    });
+  }
 };

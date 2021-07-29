@@ -1,6 +1,7 @@
 const list = [
   { id: "zhihuAtag", text: "replace zhihu a tag" },
   { id: "steamAtag", text: "replace steam a tag" },
+  { id: "juejinAtag", text: "replace juejin a tag" },
   { id: "zhihuModal", text: "remove zhihu login modal" },
 ];
 const content = document.createElement("div");

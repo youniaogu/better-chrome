@@ -1,6 +1,6 @@
 {
   "name": "Better Chrome",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "manifest_version": 2,
   "browser_action": {
     "default_icon": "icon48.png",
@@ -16,9 +16,10 @@
   "content_scripts": [
     {
       "matches": [
-        "https://www.zhihu.com/*",
-        "https://zhuanlan.zhihu.com/*",
-        "https://store.steampowered.com/*"
+        "https://www.zhihu.com/question/*",
+        "https://zhuanlan.zhihu.com/p/*",
+        "https://store.steampowered.com/app/*",
+        "https://juejin.cn/post/*"
       ],
       "js": ["background.js"]
     }

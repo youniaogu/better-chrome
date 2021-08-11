@@ -1,30 +1,31 @@
 ### Better Chrome
 
-#### 1. 替换知乎 a 标签 href 属性
+chrome 扩展程序，矫正 a 标签，去除登录弹窗
 
-- 替换前：<a href="https://link.zhihu.com/?target=https%3A//juejin.im/" target="_blank">`<a href="https://link.zhihu.com/?target=https%3A//juejin.im/" target="_blank">juejin</a>`</a>
+<img width="500" src="./images/zhihu_link.png" />
+<br />
+<img width="500" src="./images/zhihu_login_modal.png" />
 
-- 替换后：<a href="https://juejin.im/" target="_blank">`<a href="https://juejin.im/" target="_blank" >juejin</a>`</a>
-
-#### 2. 替换 steam a 标签 href 属性
-
-与第一点类似
-
-#### 3. 替换 掘金 a 标签 href 属性
-
-与第一点类似
-
-#### 4. 去掉知乎(包括知乎专栏)未登录弹窗
-
-<img width="680" src="./images/remove_zhihu_login_modal.png" />
-
-##### 开关控制
+#### 支持开关控制
 
 <img width="240" src="./images/function_switch.png" />
 
-##### 安装
+#### 网站列表
+
+- 知乎
+  - [x] 替换 a 标签
+  - [x] 去除未登录弹窗
+- steam
+  - [x] 替换 a 标签
+- 掘金
+  - [x] 替换 a 标签
+- csdn
+  - [x] 替换 a 标签
+  - [x] 去除未登录弹窗
+
+#### 安装
 
 - 打开 chrome 扩展程序的开发者模式
 - 在项目根目录，加载已解压的扩展程序
 
-<img src="./images/install_extensions.png" />
+<img width="1080"  src="./images/install_extensions.png" />

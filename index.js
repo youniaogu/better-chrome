@@ -1,10 +1,12 @@
 const list = [
-  { id: "zhihuAtag", text: "replace zhihu a tag" },
-  { id: "steamAtag", text: "replace steam a tag" },
-  { id: "juejinAtag", text: "replace juejin a tag" },
-  { id: "zhihuModal", text: "remove zhihu login modal" },
+  { id: 'zhihuAtag', text: 'replace zhihu a tag' },
+  { id: 'steamAtag', text: 'replace steam a tag' },
+  { id: 'juejinAtag', text: 'replace juejin a tag' },
+  { id: 'csdnAtag', text: 'replace csdn a tag' },
+  { id: 'zhihuModal', text: 'remove zhihu login modal' },
+  { id: 'csdnModal', text: 'remove csdn login modal' },
 ];
-const content = document.createElement("div");
+const content = document.createElement('div');
 
 function updateStorage(id) {
   return function () {
@@ -13,15 +15,15 @@ function updateStorage(id) {
 }
 
 function createSwitch(id, text, value) {
-  const div = document.createElement("div");
-  const label = document.createElement("label");
-  const input = document.createElement("input");
-  const span1 = document.createElement("span");
-  const span2 = document.createElement("span");
+  const div = document.createElement('div');
+  const label = document.createElement('label');
+  const input = document.createElement('input');
+  const span1 = document.createElement('span');
+  const span2 = document.createElement('span');
 
-  div.className = "wrapper";
-  label.className = "switch";
-  input.type = "checkbox";
+  div.className = 'wrapper';
+  label.className = 'switch';
+  input.type = 'checkbox';
 
   if (value === undefined) {
     input.checked = false;
@@ -29,8 +31,8 @@ function createSwitch(id, text, value) {
     input.checked = value;
   }
 
-  span1.textContent = text + "：";
-  span2.className = "slider";
+  span1.textContent = text + '：';
+  span2.className = 'slider';
 
   input.onclick = updateStorage(id);
 
@@ -48,6 +50,6 @@ list.forEach(function (obj) {
   });
 });
 
-window.addEventListener("DOMContentLoaded", function () {
+window.addEventListener('DOMContentLoaded', function () {
   document.body.appendChild(content);
 });

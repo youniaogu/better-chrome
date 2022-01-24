@@ -32,10 +32,7 @@ function removeZhihuLoginModal() {
 
 function removeCSDNLoginModal() {
   const observer = new MutationObserver(function () {
-    Array.from(document.getElementsByClassName('login-mark')).forEach((modal) => {
-      modal.remove();
-    });
-    Array.from(document.getElementsByClassName('login-box')).forEach((modal) => {
+    Array.from(document.getElementsByClassName('passport-login-container')).forEach((modal) => {
       modal.remove();
     });
   });

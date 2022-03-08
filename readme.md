@@ -5,6 +5,8 @@ chrome 扩展程序，矫正 a 标签，去除登录弹窗
 <img width="500" src="./images/zhihu_link.png" />
 <br />
 <img width="500" src="./images/zhihu_login_modal.png" />
+<br />
+<img width="250" src="./images/github_repos_create_time.png" />
 
 #### 支持开关控制
 
@@ -22,6 +24,8 @@ chrome 扩展程序，矫正 a 标签，去除登录弹窗
 - csdn
   - [x] 替换 a 标签
   - [x] 去除未登录弹窗
+- github
+  - [x] 显示库创建时间
 
 #### 安装
 

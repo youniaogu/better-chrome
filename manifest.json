@@ -1,6 +1,6 @@
 {
   "name": "Better Chrome",
-  "version": "0.2.8",
+  "version": "0.2.9",
   "manifest_version": 2,
   "browser_action": {
     "default_icon": "icon48.png",
@@ -21,7 +21,8 @@
         "https://store.steampowered.com/app/*",
         "https://juejin.cn/post/*",
         "https://blog.csdn.net/*/article/details/*",
-        "https://*.blog.csdn.net/article/details/*"
+        "https://*.blog.csdn.net/article/details/*",
+        "https://github.com/*"
       ],
       "js": ["background.js"]
     }

@@ -1,3 +1,4 @@
+const WATCH_OPTION_DEFAULT = { childList: true, subtree: false };
 const PATTERN_ZHIHU = /^https:\/\/www\.zhihu\.com\/question\//;
 const PATTERN_ZHIHU_ZHUANLAN = /^https:\/\/zhuanlan\.zhihu\.com\/p\//;
 const PATTERN_STEAM = /^https:\/\/store\.steampowered\.com\/app\//;
@@ -5,6 +6,13 @@ const PATTERN_JUEJIN = /^https:\/\/juejin\.cn\/post\//;
 const PATTERN_CSDN_1 = /^https:\/\/blog\.csdn\.net\/\w+\/article\/details\/\d+/;
 const PATTERN_CSDN_2 = /^https:\/\/\w+\.blog\.csdn\.net\/article\/details\/\d+/;
 const PATTERN_GITHUB_REPOS = /^https:\/\/github\.com\/[a-z0-9A-Z\.\_\-]+\/[a-z0-9A-Z\.\_\-]+/;
+
+const href = window.location.href;
+const isZhihu = PATTERN_ZHIHU_ZHUANLAN.test(href) || PATTERN_ZHIHU.test(href);
+const isSteam = PATTERN_STEAM.test(href);
+const isJuejin = PATTERN_JUEJIN.test(href);
+const isCSDN = PATTERN_CSDN_1.test(href) || PATTERN_CSDN_2.test(href);
+const isGithub = PATTERN_GITHUB_REPOS.test(href);
 
 function removePrefix(str) {
   const aTags = document.getElementsByTagName('a');
@@ -20,26 +28,69 @@ function removePrefix(str) {
   });
 }
 
+function watchElement(element, callback, option = {}) {
+  const observer = new MutationObserver(callback);
+  observer.observe(element, { ...WATCH_OPTION_DEFAULT, ...option });
+  return observer;
+}
+
+// ZHIHU
+function replaceZhihuATag() {
+  const element = document.querySelector('div[role=list]') || document.querySelector('div.Post-RichTextContainer');
+  const replace = function () {
+    removePrefix('https://link.zhihu.com/?target=');
+  };
+
+  replace();
+  watchElement(element, replace);
+}
+function closeZhihuLoginModal() {
+  const watcher = watchElement(document.body, function () {
+    const close = document.querySelector('button.Modal-closeButton[aria-label=关闭]');
+    if (close) {
+      close.click();
+      watcher.disconnect();
+    }
+  });
+}
+
+// STEAM
+function replaceSteamATag() {
+  const replace = function () {
+    removePrefix('https://steamcommunity.com/linkfilter/?url=');
+  };
+
+  replace();
+  watchElement(document.body, replace);
+}
+
+// JUEJIN
+function replaceJuejinATag() {
+  const replace = function () {
+    removePrefix('https://link.juejin.cn/?target=');
+  };
+
+  replace();
+  watchElement(document.body, replace);
+}
+
+// CSDN
 function removeContentEvent() {
   const content = document.getElementById('content_views');
   const newContent = content.cloneNode(true);
   content.parentNode.replaceChild(newContent, content);
 }
-
-function removeZhihuLoginModal() {
-  Array.from(document.getElementsByClassName('Modal-wrapper')).forEach((modal) => modal.remove());
-  Array.from(document.getElementsByTagName('html')).forEach((html) => (html.style.overflow = 'auto'));
-}
-
-function removeCSDNLoginModal() {
-  const observer = new MutationObserver(function () {
-    Array.from(document.getElementsByClassName('passport-login-container')).forEach((modal) => {
-      modal.remove();
-    });
+function closeCSDNLoginModal() {
+  const watcher = watchElement(document.body, function () {
+    const close = document.querySelector('div.passport-login-mark');
+    if (close) {
+      close.click();
+      watcher.disconnect();
+    }
   });
-  observer.observe(document.body, { childList: true, subtree: true });
 }
 
+// GITHUB
 function getReposCreateTime(href) {
   return new Promise((res) => {
     fetch('https://api.github.com/repos/' + href.match(/(?<=https:\/\/github\.com\/)[^?]+(?=\?|$)/)[0])
@@ -47,7 +98,6 @@ function getReposCreateTime(href) {
       .then((data) => res(data.created_at));
   });
 }
-
 function createSvg() {
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   const path1 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
@@ -110,33 +160,25 @@ function getConfig(key) {
   });
 }
 
-window.onload = function () {
-  const href = window.location.href;
-  const isZhihu = PATTERN_ZHIHU_ZHUANLAN.test(href) || PATTERN_ZHIHU.test(href);
-  const isSteam = PATTERN_STEAM.test(href);
-  const isJuejin = PATTERN_JUEJIN.test(href);
-  const isCSDN = PATTERN_CSDN_1.test(href) || PATTERN_CSDN_2.test(href);
-  const isGithub = PATTERN_GITHUB_REPOS.test(href);
-
+(function launch() {
   if (isZhihu) {
     getConfig('zhihuAtag').then((can) => {
-      can && removePrefix('https://link.zhihu.com/?target=');
+      can && replaceZhihuATag();
     });
-
     getConfig('zhihuModal').then((can) => {
-      can && removeZhihuLoginModal();
+      can && closeZhihuLoginModal();
     });
   }
 
   if (isSteam) {
     getConfig('steamAtag').then((can) => {
-      can && removePrefix('https://steamcommunity.com/linkfilter/?url=');
+      can && replaceSteamATag();
     });
   }
 
   if (isJuejin) {
     getConfig('juejinAtag').then((can) => {
-      can && removePrefix('https://link.juejin.cn/?target=');
+      can && replaceJuejinATag();
     });
   }
 
@@ -144,9 +186,8 @@ window.onload = function () {
     getConfig('csdnAtag').then((can) => {
       can && removeContentEvent();
     });
-
     getConfig('csdnModal').then((can) => {
-      can && removeCSDNLoginModal();
+      can && closeCSDNLoginModal();
     });
   }
 
@@ -155,4 +196,4 @@ window.onload = function () {
       can && getReposCreateTime(href).then(displayCreateTime);
     });
   }
-};
+})();

@@ -5,7 +5,7 @@ const PATTERN_STEAM = /^https:\/\/store\.steampowered\.com\/app\//;
 const PATTERN_JUEJIN = /^https:\/\/juejin\.cn\/post\//;
 const PATTERN_CSDN_1 = /^https:\/\/blog\.csdn\.net\/\w+\/article\/details\/\d+/;
 const PATTERN_CSDN_2 = /^https:\/\/\w+\.blog\.csdn\.net\/article\/details\/\d+/;
-const PATTERN_GITHUB_REPOS = /^https:\/\/github\.com\/[a-z0-9A-Z\.\_\-]+\/[a-z0-9A-Z\.\_\-]+/;
+const PATTERN_GITHUB_REPOS = /^https:\/\/github\.com\/[a-z0-9A-Z\.\_\-]+\/[a-z0-9A-Z\.\_\-]+(?=[^\/]*$)/;
 
 const href = window.location.href;
 const isZhihu = PATTERN_ZHIHU_ZHUANLAN.test(href) || PATTERN_ZHIHU.test(href);
@@ -15,14 +15,12 @@ const isCSDN = PATTERN_CSDN_1.test(href) || PATTERN_CSDN_2.test(href);
 const isGithub = PATTERN_GITHUB_REPOS.test(href);
 
 function removePrefix(str) {
-  const aTags = document.getElementsByTagName('a');
-
   if (!str) {
     return;
   }
 
-  Array.from(aTags).forEach((a) => {
-    if (a.href.indexOf(str) !== -1) {
+  Array.from(document.getElementsByTagName('a')).forEach((a) => {
+    if (a.href.includes(str)) {
       a.href = decodeURIComponent(a.href.replace(str, ''));
     }
   });
@@ -95,7 +93,15 @@ function getReposCreateTime(href) {
   return new Promise((res) => {
     fetch('https://api.github.com/repos/' + href.match(/(?<=https:\/\/github\.com\/)[^?]+(?=\?|$)/)[0])
       .then((response) => response.json())
-      .then((data) => res(data.created_at));
+      .then(({ created_at }) => {
+        if (created_at) {
+          const date = new Date(created_at);
+          const createdTime = ` ${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`;
+          res(createdTime);
+        } else {
+          res();
+        }
+      });
   });
 }
 function createSvg() {
@@ -122,10 +128,7 @@ function createSvg() {
 
   return svg;
 }
-function displayCreateTime(timescope) {
-  const date = new Date(timescope);
-  const createdTime = ` ${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`;
-
+function displayCreateTime(createdTime) {
   const div = document.createElement('div');
   const h3 = document.createElement('h3');
   const a = document.createElement('a');
@@ -136,14 +139,14 @@ function displayCreateTime(timescope) {
   h3.innerText = 'Created';
   h3.setAttribute('class', 'sr-only');
 
-  strong.innerText = createdTime;
+  strong.innerText = createdTime || ' Not Found';
 
   a.setAttribute('data-view-component', 'true');
   a.setAttribute('class', 'Link--muted');
   a.setAttribute('style', 'cursor: default;');
   a.append(svg);
   a.append(strong);
-  a.append(text);
+  createdTime && a.append(text);
 
   div.setAttribute('class', 'mt-2');
   div.appendChild(a);

@@ -5,6 +5,7 @@ const list = [
   { id: 'csdnAtag', text: 'replace csdn a tag' },
   { id: 'zhihuModal', text: 'remove zhihu login modal' },
   { id: 'csdnModal', text: 'remove csdn login modal' },
+  { id: 'twitterModal', text: 'remove twitter login modal' },
   { id: 'reposCreateTime', text: 'display repository create time' },
 ];
 const content = document.createElement('div');

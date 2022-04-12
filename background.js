@@ -5,6 +5,7 @@ const PATTERN_STEAM = /^https:\/\/store\.steampowered\.com\/app\//;
 const PATTERN_JUEJIN = /^https:\/\/juejin\.cn\/post\//;
 const PATTERN_CSDN_1 = /^https:\/\/blog\.csdn\.net\/\w+\/article\/details\/\d+/;
 const PATTERN_CSDN_2 = /^https:\/\/\w+\.blog\.csdn\.net\/article\/details\/\d+/;
+const PATTERN_TWITTER = /^https:\/\/twitter\.com\/.+\/status\/.+/;
 const PATTERN_GITHUB_REPOS = /^https:\/\/github\.com\/[a-z0-9A-Z\.\_\-]+\/[a-z0-9A-Z\.\_\-]+(?=[^\/]*$)/;
 
 const href = window.location.href;
@@ -12,6 +13,7 @@ const isZhihu = PATTERN_ZHIHU_ZHUANLAN.test(href) || PATTERN_ZHIHU.test(href);
 const isSteam = PATTERN_STEAM.test(href);
 const isJuejin = PATTERN_JUEJIN.test(href);
 const isCSDN = PATTERN_CSDN_1.test(href) || PATTERN_CSDN_2.test(href);
+const isTwitter = PATTERN_TWITTER.test(href);
 const isGithub = PATTERN_GITHUB_REPOS.test(href);
 
 function removePrefix(str) {
@@ -86,6 +88,21 @@ function closeCSDNLoginModal() {
       watcher.disconnect();
     }
   });
+}
+
+// TWITTER
+function closeTwitterLoginModal() {
+  const watcher = watchElement(
+    document.body,
+    function () {
+      const dialog = document.querySelector('div[role=dialog] div[role=group]');
+      if (dialog) {
+        dialog.remove();
+        document.documentElement.style.overflowY = 'auto';
+      }
+    },
+    { subtree: true }
+  );
 }
 
 // GITHUB
@@ -191,6 +208,12 @@ function getConfig(key) {
     });
     getConfig('csdnModal').then((can) => {
       can && closeCSDNLoginModal();
+    });
+  }
+
+  if (isTwitter) {
+    getConfig('twitterModal').then((can) => {
+      can && closeTwitterLoginModal();
     });
   }
 

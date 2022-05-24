@@ -95,10 +95,14 @@ function closeTwitterLoginModal() {
   const watcher = watchElement(
     document.body,
     function () {
-      const dialog = document.querySelector('div[role=dialog] div[role=group]');
-      if (dialog) {
-        dialog.remove();
-        document.documentElement.style.overflowY = 'auto';
+      const firstLayer = document.querySelector('div#layers > div:first-child');
+      const firstLayerHaveLoginButton = document.querySelector('div#layers > div:first-child a[data-testid=login]');
+      const closeBtn = document.querySelector('div[data-testid=app-bar-close]');
+      if (firstLayer && firstLayerHaveLoginButton) {
+        firstLayer.remove();
+      }
+      if (closeBtn) {
+        closeBtn.click();
       }
     },
     { subtree: true }

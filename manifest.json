@@ -1,6 +1,6 @@
 {
   "name": "Better Chrome",
-  "version": "0.2.11",
+  "version": "0.2.12",
   "manifest_version": 3,
   "icons": {
     "16": "icon16.png",
@@ -26,7 +26,7 @@
         "https://blog.csdn.net/*/article/details/*",
         "https://*.blog.csdn.net/article/details/*",
         "https://github.com/*",
-        "https://twitter.com/*/status/*"
+        "https://twitter.com/*"
       ],
       "js": ["background.js"]
     }

@@ -5,7 +5,7 @@ const PATTERN_STEAM = /^https:\/\/store\.steampowered\.com\/app\//;
 const PATTERN_JUEJIN = /^https:\/\/juejin\.cn\/post\//;
 const PATTERN_CSDN_1 = /^https:\/\/blog\.csdn\.net\/\w+\/article\/details\/\d+/;
 const PATTERN_CSDN_2 = /^https:\/\/\w+\.blog\.csdn\.net\/article\/details\/\d+/;
-const PATTERN_TWITTER = /^https:\/\/twitter\.com\/.+\/status\/.+/;
+const PATTERN_TWITTER = /^https:\/\/twitter\.com\/.+/;
 const PATTERN_GITHUB_REPOS = /^https:\/\/github\.com\/[a-z0-9A-Z\.\_\-]+\/[a-z0-9A-Z\.\_\-]+(?=[^\/]*$)/;
 
 const href = window.location.href;

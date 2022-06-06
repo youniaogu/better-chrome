@@ -1,6 +1,6 @@
 {
   "name": "Better Chrome",
-  "version": "0.2.12",
+  "version": "0.2.13",
   "manifest_version": 3,
   "icons": {
     "16": "icon16.png",

@@ -36,22 +36,27 @@ function watchElement(element, callback, option = {}) {
 
 // ZHIHU
 function replaceZhihuATag() {
-  const element = document.querySelector('div[role=list]') || document.querySelector('div.Post-RichTextContainer');
-  const replace = function () {
-    removePrefix('https://link.zhihu.com/?target=');
-  };
-
-  replace();
-  watchElement(element, replace);
+  watchElement(
+    document.querySelector('div#root'),
+    () => {
+      removePrefix('https://link.zhihu.com/?target=');
+      removePrefix('http://link.zhihu.com/?target=');
+    },
+    { subtree: true }
+  );
 }
 function closeZhihuLoginModal() {
-  const watcher = watchElement(document.body, function () {
-    const close = document.querySelector('button.Modal-closeButton[aria-label=关闭]');
-    if (close) {
-      close.click();
-      watcher.disconnect();
-    }
-  });
+  const watcher = watchElement(
+    document.body,
+    function () {
+      const close = document.querySelector('button.Modal-closeButton[aria-label=关闭]');
+      if (close) {
+        close.click();
+        watcher.disconnect();
+      }
+    },
+    { subtree: true }
+  );
 }
 
 // STEAM
@@ -61,7 +66,7 @@ function replaceSteamATag() {
   };
 
   replace();
-  watchElement(document.body, replace);
+  watchElement(document.body, replace, { subtree: true });
 }
 
 // JUEJIN
@@ -71,7 +76,7 @@ function replaceJuejinATag() {
   };
 
   replace();
-  watchElement(document.body, replace);
+  watchElement(document.body, replace, { subtree: true });
 }
 
 // CSDN
@@ -81,13 +86,17 @@ function removeContentEvent() {
   content.parentNode.replaceChild(newContent, content);
 }
 function closeCSDNLoginModal() {
-  const watcher = watchElement(document.body, function () {
-    const close = document.querySelector('div.passport-login-mark');
-    if (close) {
-      close.click();
-      watcher.disconnect();
-    }
-  });
+  const watcher = watchElement(
+    document.body,
+    function () {
+      const close = document.querySelector('div.passport-login-mark');
+      if (close) {
+        close.click();
+        watcher.disconnect();
+      }
+    },
+    { subtree: true }
+  );
 }
 
 // TWITTER

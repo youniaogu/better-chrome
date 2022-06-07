@@ -106,12 +106,15 @@ function closeTwitterLoginModal() {
     function () {
       const firstLayer = document.querySelector('div#layers > div:first-child');
       const firstLayerHaveLoginButton = document.querySelector('div#layers > div:first-child a[data-testid=login]');
-      const closeBtn = document.querySelector('div[data-testid=app-bar-close]');
+      const isLoginDialog = document.querySelector('div[data-testid=sheetDialog]');
+      const dialog = document.querySelector('div[role=dialog]');
       if (firstLayer && firstLayerHaveLoginButton) {
         firstLayer.remove();
       }
-      if (closeBtn) {
-        closeBtn.click();
+      if (isLoginDialog) {
+        dialog.remove();
+        document.documentElement.style.overflow = 'auto';
+        document.documentElement.style.overscrollBehaviorY = 'auto';
       }
     },
     { subtree: true }
